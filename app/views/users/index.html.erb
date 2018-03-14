@@ -1,2 +1,7 @@
-<h1>Users#index</h1>
-<p>Find me in app/views/users/index.html.erb</p>
+<h1>Merhaba,</h1>
+<h3>İstatisliklerini görmek istediğiniz lakabını giriniz </h3>
+
+<%= form_tag(user_search_path) do %>
+  <%= text_field_tag :username, "alperenbozkurt" %>
+  <%= submit_tag 'Ara' %>
+<% end %>

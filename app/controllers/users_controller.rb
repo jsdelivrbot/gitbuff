@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   def index
+    @user = User.new
   end
 
   def show
@@ -9,6 +10,11 @@ class UsersController < ApplicationController
   def most
   end
 
+  def search
+    redirect_to( user_show_path(params[:username]) )
+    # Arama formunu get metodu ile show sayfasına bağlayamadığım için araya bir search katmanı koydum.
+    # Kullanıcı arama yaptığında user#search çalışıyor. Burdan da user#show 'a yolluyorum.
+  end
 
   private
 
