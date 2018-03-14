@@ -1,0 +1,6 @@
+<%- if !@user['message'] %>
+  <h3><%= @user['name'] %></h3>
+  <%= image_tag @user['avatar_url'] %>
+<% else %>
+  <h3>Buralar boş gözüküyor</h3>
+<% end %>
