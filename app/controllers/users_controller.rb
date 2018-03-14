@@ -19,6 +19,7 @@ class UsersController < ApplicationController
   end
 
   def most
+    @users = User.order(count: :desc).first(10)
   end
 
   def search
