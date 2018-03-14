@@ -1,2 +1,4 @@
-<h1>Users#most</h1>
-<p>Find me in app/views/users/most.html.erb</p>
+<h1>En Popüler Kullanıcılar</h1>
+<%- @users.each do |e| %>
+  <%= e.username + " " + e.count.to_s %><br>
+<% end %>
