@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  username: MyString
+  username: alperen
   count: 1
 
 two:
-  username: MyString
+  username: alperenbozkurt
   count: 1
