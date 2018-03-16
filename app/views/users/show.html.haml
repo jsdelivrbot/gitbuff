@@ -1,0 +1,20 @@
+= render 'header'
+.ui.container
+  .ui.segment
+    - if !@user['message']
+      .ui.grid
+        .four.wide.column
+          = image_tag @user['avatar_url'], class: 'ui medium circular image shadow'
+        .twelve.wide.column
+          %h1
+            = @user['name']
+          .ui.labeled.button{"data-inverted": "", "data-tooltip": "#{ @database_user.count } Kişi bu profile bakmış"}
+            .ui.blue.button
+              %i.eye.icon
+              Gösterilme
+            .ui.basic.blue.left.pointing.label
+              = @database_user.count
+    - else
+      .text-center
+        %h1.ui.header.blue
+          Buralar boş gözüküyor

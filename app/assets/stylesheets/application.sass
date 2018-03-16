@@ -1,0 +1,67 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+@import "semantic-ui"
+@import url('https://fonts.googleapis.com/css?family=Lobster')
+
+$my-color: #3498db
+$bg-color: #ecf0f1
+
+body
+  background-color: $bg-color
+.prompt
+  border-radius: 3px !important
+  border: 0px !important
+  width: 100% !important
+  padding: 0px
+  margin: 0px
+.ui.search > .results
+  width: 100%
+  text-align: left
+.ui.search .action:hover
+  background: none
+.my-color
+  background: $my-color !important
+.main-header
+  font-family: 'Lobster', cursive
+  font-size: 50px
+  padding-top: 50px
+  color: $my-color
+  text-shadow: rgba(40,40,40,0.14) 0px 0px 2px
+  margin-bottom: 50px
+.header-page
+  margin-bottom: 0px !important
+  padding-top: 0px !important
+  line-height: 36px
+  a
+    color: $bg-color !important
+    &hover
+      color: #ddd !important
+
+\::-webkit-input-placeholder
+  color: rgba(81,81,81,0.6) !important
+  opacity: 1 !important
+.shadow
+  box-shadow: 0px 0px 6px 3px rgba(81, 81, 81, 0.2) !important
+.no-radius
+  border-radius: 0px !important
+.text-center
+  text-align: center
+.most-popular
+  color: $bg-color
+  font-size: 22px
+  float: right
+  line-height: 36px
+  

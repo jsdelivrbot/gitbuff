@@ -1,0 +1,22 @@
+.ui.search
+  = form_tag(user_search_path) do
+    .ui.fluid.action.left.icon.input
+      = text_field_tag :username, '', placeholder: 'Kullanıcı adını giriniz...', type: "text", class: 'prompt'
+      %i.github.icon
+      .ui.button Ara
+
+:javascript
+  $('.ui.search')
+    .search({
+      apiSettings: {
+        url: '//api.github.com/search/users?q={query}'
+      },
+      fields: {
+        results : 'items',
+        title   : 'login',
+        image   : 'avatar_url',
+        url     : 'login'
+      },
+      minCharacters : 3
+    })
+  ;

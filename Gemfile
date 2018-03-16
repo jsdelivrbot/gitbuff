@@ -57,3 +57,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # Eklenenler
 
 gem 'faraday'
+gem 'semantic-ui-sass'
+gem 'haml'
+gem 'jquery-rails'
