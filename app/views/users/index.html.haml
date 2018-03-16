@@ -1,0 +1,33 @@
+.ui.grid
+  .row
+    .column.three.wide
+    .column.ten.wide
+      .main-header.text-center
+        Gitbuff
+      .ui.my-color.inverted.segment.shadow
+        .ui.hidden.divider
+        .ui.hidden.divider
+        .ui.hidden.divider
+        .row.ui.grid
+          .column.three.wide
+          .column.ten.wide
+            = render 'search'
+          .column.three.wide
+        .ui.hidden.divider
+        .ui.hidden.divider
+        .ui.hidden.divider
+        .ui.center.aligned.grid
+          = link_to 'En Popüler Kullanıcılar', most_popular_users_path, class: 'ui button'
+        .ui.hidden.divider
+        .ui.hidden.divider
+        .ui.hidden.divider
+    .column.three.wide
+.ui.hidden.divider
+.ui.hidden.divider
+.row
+  .text-center
+    Bu site MIT Lisansı ile lisanslanmıştır.
+    %br
+    Kaynak kodlarına
+    %a{:href => "https://github.com/alperenbozkurt/gitbuff"} bu linkten
+    erişebilirsiniz

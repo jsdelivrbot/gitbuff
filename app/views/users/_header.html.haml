@@ -1,0 +1,11 @@
+.ui.my-color.inverted.segment.no-radius.shadow
+  .ui.container
+    .ui.three.column.grid
+      .row
+        .column
+          .main-header.header-page
+            = link_to 'Gitbuff', root_path
+        .column
+          = render 'search'
+        .column
+          = link_to 'En Popüler Kullanıcılar', most_popular_users_path, class: 'most-popular'
