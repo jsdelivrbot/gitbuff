@@ -1,19 +1,38 @@
 = render 'header'
 .ui.container
   .ui.segment
-    - if !@user['message']
+    - if @user.present?
       .ui.grid
         .four.wide.column
-          = image_tag @user['avatar_url'], class: 'ui medium circular image shadow'
+          = image_tag @git_user['avatar_url'], class: 'ui medium circular image shadow'
         .twelve.wide.column
           %h1
-            = @user['name']
-          .ui.labeled.button{"data-inverted": "", "data-tooltip": "#{ @database_user.count } Kişi bu profile bakmış"}
+            = @git_user['name']
+          .ui.labeled.button{"data-inverted": "", "data-tooltip": "#{ @user.count } Kişi bu profile bakmış"}
             .ui.blue.button
               %i.eye.icon
               Gösterilme
             .ui.basic.blue.left.pointing.label
-              = @database_user.count
+              = @user.count
+          %br
+            %h2
+              Depolar
+            %table.ui.blue.table
+              %thead
+                %tr
+                  %th Depo Adı
+                  %th Açıklama
+                  %th Programlama Dili
+              %tbody
+                - @git_user['repos'].each do |repo|
+                  %tr
+                    %td
+                      = link_to repo['name'], repo['html_url']
+                    %td
+                      = repo['description'] ||= "------" # Ayrıntılar için http://alperenbozkurt.net/Rubyde-varlik-atamasi/ adresini ziyaret edebilirsiniz.
+                    %td
+                      = repo['language'] ||= "------"    # Eğer dil bilgisi nil gelirse "dil bulunamadı" yazıyor
+
     - else
       .text-center
         %h1.ui.header.blue

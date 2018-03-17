@@ -4,17 +4,14 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = get_user(params[:username]) # Github API'den kullanıcı bilgilerini çeken method.
-                                        # Arama sonucunda bir kullanıcının gelip gelmediğini 'message' anahtarı ile anlıyorum.
-    if !@user['message']                # Eğer kullanıcı yoksa response-da 'message' anahtarı bulunuyor. Varsa bulunmuyor.
-      @database_user = User.find_by(username: params[:username]) # Kullanıcıyı veritabanında arıyorum
+    @user = User.find_by(username: params[:username])               # Eğer kullanıcı var ise getirdik
+    @git_user = get_user_info(params[:username])                    # Githubdan kullanıcının verilerini getirdik.
 
-      if @database_user.nil?            # Eğer kullanıcı veritabanında yoksa oluşturuyorum.
-        @database_user = User.create( username: params[:username], count: 1 )
-      else                              # Eğer varsa da
-        @database_user.count += 1       # sayacını 1 arttırıp,
-        @database_user.save!            # kaydediyorum.
-      end
+    if @user.nil? && @git_user['login'].present?                    # Kullanıcı veritabanında yok ama githubdan geliyorsa
+      @user = User.create(username: @git_user['login'], count: 1)   # bu kullanıcıyı veritabanına ekledik
+    elsif @user.present?
+      @user.count += 1                                              # Kullanıcı zaten varsa sayacını bir arttırdık
+      @user.save!
     end
   end
 
@@ -23,22 +20,28 @@ class UsersController < ApplicationController
   end
 
   def search
-    redirect_to( user_show_path(params[:username]) )
+    redirect_to user_show_path(params[:username])
     # Arama formunu get metodu ile show sayfasına bağlayamadığım için araya bir search katmanı koydum.
     # Kullanıcı arama yaptığında user#search çalışıyor. Burdan da user#show 'a yolluyorum.
   end
 
   private
 
-  def get_user(username)
-    cert = File.join(File.dirname(__FILE__), "../../app/assets/certs/cacert.pem")
-    # Sertifika hatasını fixlemek için sertifika manuel alınıyor.
+  def get_user_info(username)
+    access_token = "8cb02b324d0713ad491bd957c708f274be313719"
 
     url = 'https://api.github.com'
-
+    cert = File.join(File.dirname(__FILE__), "../../app/assets/certs/cacert.pem")
+    # Sertifika hatasını fixlemek için sertifika manuel alınıyor.
     connection = Faraday.new(url, ssl: { ca_file: cert })
-    response = connection.get("users/#{ username }")        # Github apilerinden bilgi almak için gerekli bağlantı kuruldu
 
-    user = JSON.parse(response.body)                        # Gelen stringi daha rahat kullanmak için hash'e çevirdik
+    response_user  = connection.get("users/#{ username }?access_token=#{access_token}")
+    response_repos = connection.get("users/#{ username }/repos?access_token=#{access_token}")
+    # Github apilerinden bilgi almak için gerekli bağlantı kuruldu
+
+    user  = JSON.parse(response_user.body)        # Gelen stringi daha rahat kullanmak için hash'e çevirdik
+    repos = { "repos" => JSON.parse(response_repos.body) }
+
+    user.merge! repos         # repoları user değişkeninin içerisine atarak tek bir değişken return ediyoruz.
   end
 end
