@@ -41,20 +41,29 @@ class UsersController < ApplicationController
 
     user  = JSON.parse(response_user.body)        # Gelen stringi daha rahat kullanmak için hash'e çevirdik
     repos = JSON.parse(response_repos.body)
-
+    fav_langs = []
     line_sum = 0
+
     repos.each do |repo|
       langs = connection.get("repos/#{ username }/#{ repo['name'] }/languages?access_token=#{access_token}")
       langs = JSON.parse(langs.body)      # Bu iki satırda hangi dillerle kaç satır yazıldığının bilgisi geliyor.
-
       line_sum += langs.values.sum        # gelen veriler önce birbiriyle, sonra da diğer depoların satır sayıları ile toplanıyor.
+
+      fav_langs << langs.keys.first unless langs.keys.first.nil?
+      # Üst satırda o deponun en çok kullanılan dilini favori dillere ekliyorum.
+
     end
-                                                          # spaces_on metodu alt tarafta tanımlı.
-    line_sum = { "line_counter" => spaces_on(line_sum) }  # user değişkeni ile birleştirmek için hash haline getiriyoruz.
-    repos = { "repos" => repos }
+
+    fav_lang = fav_langs.max_by{ |lang| fav_langs.count(lang) }     # En çok tekrar eden dili seçiyorum.
+
+
+    line_sum = { "line_counter" => spaces_on(line_sum) }  # spaces_on metodu alt tarafta tanımlı.
+    repos = { "repos" => repos }                          # user değişkeni ile birleştirmek için hash haline getiriyoruz.
+    fav_lang = {"fav_lang" => fav_lang}
 
     user.merge! repos         # repoları user değişkeninin içerisine atarak tek bir değişken return ediyoruz.
     user.merge! line_sum
+    user.merge! fav_lang
   end
 
   def spaces_on number
