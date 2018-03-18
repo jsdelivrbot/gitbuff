@@ -40,8 +40,27 @@ class UsersController < ApplicationController
     # Github apilerinden bilgi almak için gerekli bağlantı kuruldu
 
     user  = JSON.parse(response_user.body)        # Gelen stringi daha rahat kullanmak için hash'e çevirdik
-    repos = { "repos" => JSON.parse(response_repos.body) }
+    repos = JSON.parse(response_repos.body)
+
+    line_sum = 0
+    repos.each do |repo|
+      langs = connection.get("repos/#{ username }/#{ repo['name'] }/languages?access_token=#{access_token}")
+      langs = JSON.parse(langs.body)      # Bu iki satırda hangi dillerle kaç satır yazıldığının bilgisi geliyor.
+
+      line_sum += langs.values.sum        # gelen veriler önce birbiriyle, sonra da diğer depoların satır sayıları ile toplanıyor.
+    end
+                                                          # spaces_on metodu alt tarafta tanımlı.
+    line_sum = { "line_counter" => spaces_on(line_sum) }  # user değişkeni ile birleştirmek için hash haline getiriyoruz.
+    repos = { "repos" => repos }
 
     user.merge! repos         # repoları user değişkeninin içerisine atarak tek bir değişken return ediyoruz.
+    user.merge! line_sum
   end
+
+  def spaces_on number
+    number.to_s.gsub(/\D/, '').reverse.gsub(/.{3}/, '\0.').reverse
+  end
+  # Bu metod Büyük bir sayıyı daha rahat okunabilmesi için 3 rakam 3 rakam ayırıyor.
+  # Bu methodu https://stackoverflow.com/questions/9166553/formatting-a-number-to-split-at-every-third-digit
+  # adresinden aldım.
 end

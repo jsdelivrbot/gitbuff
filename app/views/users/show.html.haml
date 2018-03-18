@@ -14,6 +14,16 @@
               Gösterilme
             .ui.basic.blue.left.pointing.label
               = @user.count
+          .ui.labeled.button{"data-inverted": "", "data-tooltip": "#{ @git_user['line_counter'] } satır kod yazmış"}
+            .ui.blue.button
+              %i.file.alternate.icon
+              Satır Sayısı
+            .ui.basic.blue.left.pointing.label
+              = @git_user['line_counter']
+          %br
+          = @git_user['line_sum']
+          %br
+
           %br
             %h2
               Depolar
