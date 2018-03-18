@@ -56,14 +56,18 @@ class UsersController < ApplicationController
 
     fav_lang = fav_langs.max_by{ |lang| fav_langs.count(lang) }     # En çok tekrar eden dili seçiyorum.
 
+    stars = sum_star(repos)
+    puts stars
 
-    line_sum = { "line_counter" => spaces_on(line_sum) }  # spaces_on metodu alt tarafta tanımlı.
-    repos = { "repos" => repos }                          # user değişkeni ile birleştirmek için hash haline getiriyoruz.
-    fav_lang = {"fav_lang" => fav_lang}
+    line_sum  = { "line_counter" => spaces_on(line_sum) }  # spaces_on metodu alt tarafta tanımlı.
+    repos     = { "repos" => repos }                          # user değişkeni ile birleştirmek için hash haline getiriyoruz.
+    fav_lang  = { "fav_lang" => fav_lang }
+    stars     = { "stars" => stars }
 
     user.merge! repos         # repoları user değişkeninin içerisine atarak tek bir değişken return ediyoruz.
     user.merge! line_sum
     user.merge! fav_lang
+    user.merge! stars
   end
 
   def spaces_on number
@@ -72,4 +76,12 @@ class UsersController < ApplicationController
   # Bu metod Büyük bir sayıyı daha rahat okunabilmesi için 3 rakam 3 rakam ayırıyor.
   # Bu methodu https://stackoverflow.com/questions/9166553/formatting-a-number-to-split-at-every-third-digit
   # adresinden aldım.
+
+  def sum_star repos
+    sum = 0                           # Bu metod toplam yıldız sayısını buluyor.
+    repos.each do |repo|
+      sum += repo["stargazers_count"]
+    end
+    sum
+  end
 end
