@@ -22,11 +22,11 @@
               = @git_user['line_counter']
           .ui.labeled.button{"data-inverted": "", "data-tooltip": "En çok #{ @git_user['fav_lang'] } dili ile geliştirme yapılmış"}
             .ui.blue.button
-              %i.file.alternate.icon
+              %i.heart.outline.icon
               Favori Dil
             .ui.basic.blue.left.pointing.label
-              = @git_user['fav_lang']
-          .ui.labeled.button{"data-inverted": "", "data-tooltip": "En çok #{ @git_user['fav_lang'] } dili ile geliştirme yapılmış"}
+              = @git_user['fav_lang'] ||= "Bulunamadı"
+          .ui.labeled.button{"data-inverted": "", "data-tooltip": "Toplam #{ @git_user['stars'] } star almış"}
             .ui.blue.button
               %i.star.icon
               Toplam Star
