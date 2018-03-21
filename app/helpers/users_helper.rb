@@ -60,9 +60,11 @@ module UsersHelper
     line_sum = 0
 
     repos.each do |repo|
-      langs = connection.get("repos/#{ username }/#{ repo['name'] }/languages?access_token=#{access_token}")
-      langs = JSON.parse(langs.body)                  # Bu iki satırda hangi dillerle kaç satır yazıldığının bilgisi geliyor.
-      line_sum += langs.values.sum                    # gelen veriler önce birbiriyle, sonra da diğer depoların satır sayıları ile toplanıyor.
+      unless repo["fork"]                             # Eğer depo forklanmamışsa
+        langs = connection.get("repos/#{ username }/#{ repo['name'] }/languages?access_token=#{access_token}")
+        langs = JSON.parse(langs.body)                # Bu iki satırda hangi dillerle kaç satır yazıldığının bilgisi geliyor.
+        line_sum += langs.values.sum                  # gelen veriler önce birbiriyle, sonra da diğer depoların satır sayıları ile toplanıyor.
+      end
     end
     spaces_on(line_sum)                               # Yukarıda tanımlı line_sum methodu ile sayı daha okunaklı yapıldı.
   end
