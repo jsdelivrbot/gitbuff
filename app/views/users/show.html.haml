@@ -56,16 +56,12 @@
                     = repo['description'] ||= "------" # Ayrıntılar için http://alperenbozkurt.net/Rubyde-varlik-atamasi/ adresini ziyaret edebilirsiniz.
                   %td
                     = repo['language'] ||= "------"    # Eğer dil bilgisi nil gelirse "dil bulunamadı" yazıyor
-
+      :coffeescript
+        $(document).ready ->
+          $.ajax(url: "/#{@user.username}/line").done (html) ->     # burada sayfa yüklendikten sonra satır sayısını veren
+            $("#line_count").html html                              # endpoint'e istek yaparak içeriğe sonradan eklenmesini sağladım.
+            $("#line_count_hover").attr "data-tooltip", html + " satır kod yazılmış."
     - else
       .text-center
         %h1.ui.header.blue
           Buralar boş gözüküyor
-
-
-
-:coffeescript
-  $(document).ready ->
-    $.ajax(url: "/#{@user.username}/line").done (html) ->     # burada sayfa yüklendikten sonra satır sayısını veren
-      $("#line_count").html html                              # endpoint'e istek yaparak içeriğe sonradan eklenmesini sağladım.
-      $("#line_count_hover").attr "data-tooltip", html + " satır kod yazılmış."

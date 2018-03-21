@@ -11,14 +11,15 @@ module UsersHelper
     user  = JSON.parse(response_user.body)                                                    # Gelen stringi daha rahat kullanmak için hash'e çevirdik
     repos = JSON.parse(response_repos.body)
 
+    if user['login'].present?
+      stars       = sum_star(repos)
+      fav_lang    = fav_lang(repos)
 
-    stars       = sum_star(repos)
-    fav_lang    = fav_lang(repos)
+      other_infos = { "repos" => repos, "fav_lang" => fav_lang, "stars" => stars }            # user değişkeni ile birleştirmek için hash haline getiriyoruz.
 
-    other_infos = { "repos" => repos, "fav_lang" => fav_lang, "stars" => stars }              # user değişkeni ile birleştirmek için hash haline getiriyoruz.
-
-    user.merge! other_infos                   # Bilgileri user değişkeninin içerisine atarak tek bir değişken return ediyoruz.
-
+      user.merge! other_infos                   # Bilgileri user değişkeninin içerisine atarak tek bir değişken return ediyoruz.
+    end
+    return user
   end
 
   def spaces_on number
