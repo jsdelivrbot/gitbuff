@@ -11,25 +11,29 @@ module UsersHelper
     user  = JSON.parse(response_user.body)                                                    # Gelen stringi daha rahat kullanmak için hash'e çevirdik
     repos = JSON.parse(response_repos.body)
 
+    if user['login'].present?
+      stars       = sum_star(repos)
+      fav_lang    = fav_lang(repos)
 
-    stars       = sum_star(repos)
-    fav_lang    = fav_lang(repos)
+      other_infos = { "repos" => repos, "fav_lang" => fav_lang, "stars" => stars }            # user değişkeni ile birleştirmek için hash haline getiriyoruz.
 
-    other_infos = { "repos" => repos, "fav_lang" => fav_lang, "stars" => stars }              # user değişkeni ile birleştirmek için hash haline getiriyoruz.
-
-    user.merge! other_infos                   # Bilgileri user değişkeninin içerisine atarak tek bir değişken return ediyoruz.
-
+      user.merge! other_infos                         # Bilgileri user değişkeninin içerisine atarak tek bir değişken return ediyoruz.
+    end
+    return user
   end
 
   def spaces_on number
-    number.to_s.gsub(/\D/, '').reverse.gsub(/.{3}/, '\0.').reverse
+    humanized = number.to_s.reverse.gsub(/.{3}/, '\0.').reverse
+    if number.digits.count % 3 == 0                   # Eğer rakam sayısı 3 veya daha fazlaysa başındaki . yı kaldırdım
+      humanized = humanized[1..-1]                    # Örnek : .123.456.789 ==> 123.456.789
+    end
+    return humanized
   end
   # Bu metod Büyük bir sayıyı daha rahat okunabilmesi için 3 rakam 3 rakam ayırıyor.
-  # Bu methodu https://stackoverflow.com/questions/9166553/formatting-a-number-to-split-at-every-third-digit
-  # adresinden aldım.
+  # Bu methodu https://stackoverflow.com/a/9166572/7244925 adresinden aldım.
 
   def sum_star(repos)
-    sum = 0                                 # Bu metod toplam yıldız sayısını buluyor.
+    sum = 0                                           # Bu metod toplam yıldız sayısını buluyor.
     repos.each do |repo|
       sum += repo["stargazers_count"]
     end
@@ -42,7 +46,7 @@ module UsersHelper
       langs << repo['language'] unless repo['language'].nil?    # Deponun dili varsa diziye ekliyorum.
     end
 
-    langs.max_by{ |lang| langs.count(lang) }     # En çok tekrar eden dili return ediyorum.
+    langs.max_by{ |lang| langs.count(lang) }          # En çok tekrar eden dili return ediyorum.
   end
 
   def get_line_count(username)
@@ -56,10 +60,12 @@ module UsersHelper
     line_sum = 0
 
     repos.each do |repo|
-      langs = connection.get("repos/#{ username }/#{ repo['name'] }/languages?access_token=#{access_token}")
-      langs = JSON.parse(langs.body)      # Bu iki satırda hangi dillerle kaç satır yazıldığının bilgisi geliyor.
-      line_sum += langs.values.sum        # gelen veriler önce birbiriyle, sonra da diğer depoların satır sayıları ile toplanıyor.
+      unless repo["fork"]                             # Eğer depo forklanmamışsa
+        langs = connection.get("repos/#{ username }/#{ repo['name'] }/languages?access_token=#{access_token}")
+        langs = JSON.parse(langs.body)                # Bu iki satırda hangi dillerle kaç satır yazıldığının bilgisi geliyor.
+        line_sum += langs.values.sum                  # gelen veriler önce birbiriyle, sonra da diğer depoların satır sayıları ile toplanıyor.
+      end
     end
-    spaces_on(line_sum)                   # Yukarıda tanımlı line_sum methodu ile sayı daha okunaklı yapıldı.
+    spaces_on(line_sum)                               # Yukarıda tanımlı line_sum methodu ile sayı daha okunaklı yapıldı.
   end
 end
