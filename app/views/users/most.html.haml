@@ -7,14 +7,15 @@
     %h1.ui.header.blue
       En Popüler Kullanıcılar
     .ui.segment
-      .ui.list
+      .ui.items
         - @users.each do |e|
           .item
-            %img.ui.avatar.image{:src => "https://semantic-ui.com/images/avatar2/small/rachel.png"}/
+            %a.ui.tiny.image
+              %img{:src => e.image_url}/
             .content
               %a.header{href: e.username }
                 = e.username
               .description
+                %p
                 = e.count.to_s
-                Görüntülenme.
-            %br/
+                Görüntülenme
