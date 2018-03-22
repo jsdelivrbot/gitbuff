@@ -3,59 +3,60 @@
   .ui.segment
     - if @user.present?
       .ui.grid
-        .four.wide.column
-          = image_tag @git_user['avatar_url'], class: 'ui medium circular image shadow'
-        .twelve.wide.column
-          %h1
-            = @git_user['name']
-          .ui.labeled.button{"data-inverted": "", "data-tooltip": "Bu profil #{ @user.count } kez görüntülenmiş."}
-            .ui.blue.button
-              %i.eye.icon
-              Gösterilme
-            .ui.basic.blue.left.pointing.label
-              = @user.count
+        .row
+          .four.wide.column
+            = image_tag @git_user['avatar_url'], class: 'ui medium circular image shadow'
+          .twelve.wide.column
+            %h1
+              = @git_user['name']
+            .ui.labeled.button{"data-inverted": "", "data-tooltip": "Bu profil #{ @user.count } kez görüntülenmiş."}
+              .ui.blue.button
+                %i.eye.icon
+                Gösterilme
+              .ui.basic.blue.left.pointing.label
+                = @user.count
 
-          .ui.labeled.button#line_count_hover{"data-inverted": "", "data-tooltip": "Çok fazla kod var. Hesaplamaya çalışıyoruz."}
-            .ui.blue.button
-              %i.file.alternate.icon
-              Satır Sayısı
-            .ui.basic.blue.left.pointing.label
-              #line_count
-                .ui.active.inline.loader.tiny
+            .ui.labeled.button#line_count_hover{"data-inverted": "", "data-tooltip": "Çok fazla kod var. Hesaplamaya çalışıyoruz."}
+              .ui.blue.button
+                %i.file.alternate.icon
+                Satır Sayısı
+              .ui.basic.blue.left.pointing.label
+                #line_count
+                  .ui.active.inline.loader.tiny
 
-          .ui.labeled.button{"data-inverted": "", "data-tooltip": "En çok #{ @git_user['fav_lang'] } dili ile geliştirme yapılmış."}
-            .ui.blue.button
-              %i.heart.icon
-              Favori Dil
-            .ui.basic.blue.left.pointing.label
-              = @git_user['fav_lang'] ||= "Bulunamadı"
-          .ui.labeled.button{"data-inverted": "", "data-tooltip": "Toplam #{ @git_user['stars'] } star almış."}
-            .ui.blue.button
-              %i.star.icon
-              Toplam Star
-            .ui.basic.blue.left.pointing.label
-              = @git_user['stars']
-          %br
-
-
-          %br
-          %h2
-            Depolar
-          %table.ui.blue.table
-            %thead
-              %tr
-                %th Depo Adı
-                %th Açıklama
-                %th Programlama Dili
-            %tbody
-              - @git_user['repos'].each do |repo|
+            .ui.labeled.button{"data-inverted": "", "data-tooltip": "En çok #{ @git_user['fav_lang'] } dili ile geliştirme yapılmış."}
+              .ui.blue.button
+                %i.heart.icon
+                Favori Dil
+              .ui.basic.blue.left.pointing.label
+                = @git_user['fav_lang'] ||= "Bulunamadı"
+            .ui.labeled.button{"data-inverted": "", "data-tooltip": "Toplam #{ @git_user['stars'] } star almış."}
+              .ui.blue.button
+                %i.star.icon
+                Toplam Star
+              .ui.basic.blue.left.pointing.label
+                = @git_user['stars']
+        .row
+          .one.wide.column
+          .fourteen.wide.column
+            %h2
+              Depolar
+            %table.ui.blue.table
+              %thead
                 %tr
-                  %td
-                    = link_to repo['name'], repo['html_url']
-                  %td
-                    = repo['description'] ||= "------" # Ayrıntılar için http://alperenbozkurt.net/Rubyde-varlik-atamasi/ adresini ziyaret edebilirsiniz.
-                  %td
-                    = repo['language'] ||= "------"    # Eğer dil bilgisi nil gelirse "dil bulunamadı" yazıyor
+                  %th Depo Adı
+                  %th Açıklama
+                  %th Programlama Dili
+              %tbody
+                - @git_user['repos'].each do |repo|
+                  %tr
+                    %td
+                      = link_to repo['name'], repo['html_url']
+                    %td
+                      = repo['description'] ||= "------" # Ayrıntılar için http://alperenbozkurt.net/Rubyde-varlik-atamasi/ adresini ziyaret edebilirsiniz.
+                    %td
+                      = repo['language'] ||= "------"    # Eğer dil bilgisi nil gelirse "dil bulunamadı" yazıyor
+          .one.wide.column
       :coffeescript
         $(document).ready ->
           $.ajax(url: "/#{@user.username}/line").done (html) ->     # burada sayfa yüklendikten sonra satır sayısını veren
@@ -65,3 +66,5 @@
       .text-center
         %h1.ui.header.blue
           Buralar boş gözüküyor
+
+= render 'footer'
