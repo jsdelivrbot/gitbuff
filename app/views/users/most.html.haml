@@ -1,9 +1,8 @@
 = render 'header'
 .ui.container
   - if @users.empty?
-    Daha önce kimsenin profiline bakan olmamış.
+    Buralar Boş Gözüküyor yanlış gelmiş olabilirsin. Yada sen biraz erken geldin.
   - else
-
     %h1.ui.header.blue
       En Popüler Kullanıcılar
     .ui.segment
@@ -19,3 +18,4 @@
                 %p
                 = e.count.to_s
                 Görüntülenme
+        = will_paginate @users

@@ -13,14 +13,14 @@ class UsersController < ApplicationController
 
     if @user.nil? && @git_user['login'].present?                    # Kullanıcı veritabanında yok ama githubdan geliyorsa
       @user = User.create(username: @git_user['login'], image_url: @git_user['avatar_url'], count: 1)
-    elsif @user.present?                                            # ^^^^ bu kullanıcıyı veritabanına ekledik. 
+    elsif @user.present?                                            # ^^^^ bu kullanıcıyı veritabanına ekledik.
       @user.count += 1
       @user.save!                                                   # Kullanıcı zaten varsa sayacını bir arttırdık
     end                                                             # Böyle bir kullanıcı hiç yoksa diye view katmanında kontrol yapacağım.
   end
 
   def most
-    @users = User.order(count: :desc).first(10)
+    @users = User.paginate(:page => params[:page], :per_page => 5).order(count: :DESC)
   end
 
   def search
