@@ -1,9 +1,10 @@
 .ui.search
-  = form_tag(user_search_path) do
+  = form_tag(user_search_path, id:'search_form') do
     .ui.fluid.action.left.icon.input
       = text_field_tag :username, '', placeholder: 'Kullanıcı adını giriniz...', type: "text", class: 'prompt'
       %i.github.icon
-      .ui.button Ara
+      .ui.button#search
+        Ara
 
 :javascript
   $('.ui.search')
@@ -20,3 +21,6 @@
       minCharacters : 3
     })
   ;
+  $("#search").click(function() {
+    $("#search_form").submit();
+  });
