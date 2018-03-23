@@ -9,9 +9,11 @@ class UsersController < ApplicationController
 
     @user = User.find_by(username: params[:username])               # Eğer kullanıcı var ise getirdik
     @git_user = helpers.get_user_info(params[:username])            # Githubdan kullanıcının verilerini getirdik.
-                                                                    # Methodlar userhelpers.rb'de tanımlı.
 
-    if @user.nil? && @git_user['login'].present?                    # Kullanıcı veritabanında yok ama githubdan geliyorsa
+
+    redirect_to(query_error_path) if @git_user.include? 'message'
+
+    if @user.nil? && @git_user.present?                    # Kullanıcı veritabanında yok ama githubdan geliyorsa
       @user = User.create(username: @git_user['login'], image_url: @git_user['avatar_url'], count: 1)
     elsif @user.present?                                            # ^^^^ bu kullanıcıyı veritabanına ekledik.
       @user.count += 1
@@ -31,5 +33,11 @@ class UsersController < ApplicationController
 
   def line
     @line_count = helpers.get_line_count(params[:username])         # Satır sayısını hesaplayan yardımcı methodu çağırdım.
+  end
+
+  def error
+    headers = helpers.remaining_time
+    @remaining_time = Time.at headers['x-ratelimit-reset'].to_i
+    @remaining_time = @remaining_time.strftime("%H:%M")
   end
 end

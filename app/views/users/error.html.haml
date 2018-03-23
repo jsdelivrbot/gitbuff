@@ -1,0 +1,13 @@
+= render 'header'
+.ui.container
+  .ui.segment.yellow
+    %h1
+      Hata Oluştu.
+    %p
+      - if @remaining_time.nil?
+        Bir yanlışlık oldu galiba. Bu isteğinizi mail@alperenbozkurt.net adresine bildirebilir misiniz?
+      - else
+        Çok fazla sorgu yapıldı. Galiba Github'ın bize verdiği sorgu limitini geçtik. Servisin tekrar aktif olması için saat
+        = @remaining_time
+        'e kadar beklemeniz gerekiyor.
+= render 'footer'

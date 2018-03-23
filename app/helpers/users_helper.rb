@@ -1,15 +1,15 @@
 module UsersHelper
   def get_user_info(username)
-    access_token = "8cb02b324d0713ad491bd957c708f274be313719"
-
     cert = File.join(File.dirname(__FILE__), "../../app/assets/certs/cacert.pem")             # Sertifika hatasını fixlemek için sertifika manuel alınıyor.
     connection = Faraday.new('https://api.github.com', ssl: { ca_file: cert })
 
-    response_user  = connection.get("users/#{ username }?access_token=#{access_token}")
-    response_repos = connection.get("users/#{ username }/repos?access_token=#{access_token}") # Github apilerinden bilgi almak için gerekli bağlantı kuruldu
+    response_user  = connection.get("users/#{ username }")
+    response_repos = connection.get("users/#{ username }/repos") # Github apilerinden bilgi almak için gerekli bağlantı kuruldu
 
     user  = JSON.parse(response_user.body)                                                    # Gelen stringi daha rahat kullanmak için hash'e çevirdik
     repos = JSON.parse(response_repos.body)
+
+
 
     if user['login'].present?
       stars       = sum_star(repos)
@@ -50,22 +50,35 @@ module UsersHelper
   end
 
   def get_line_count(username)
-    access_token = "8cb02b324d0713ad491bd957c708f274be313719"
     cert = File.join(File.dirname(__FILE__), "../../app/assets/certs/cacert.pem")
     connection = Faraday.new('https://api.github.com', ssl: { ca_file: cert })
 
-    response_repos = connection.get("users/#{ username }/repos?access_token=#{access_token}")
+    response_repos = connection.get("users/#{ username }/repos")
     repos = JSON.parse(response_repos.body)
+
+    redirect_to(query_error_path) if repos.include? 'message'
 
     line_sum = 0
 
     repos.each do |repo|
       unless repo["fork"]                             # Eğer depo forklanmamışsa
-        langs = connection.get("repos/#{ username }/#{ repo['name'] }/languages?access_token=#{access_token}")
+        langs = connection.get("repos/#{ username }/#{ repo['name'] }/languages")
         langs = JSON.parse(langs.body)                # Bu iki satırda hangi dillerle kaç satır yazıldığının bilgisi geliyor.
+
+        redirect_to(query_error_path) if repos.include? 'message'
+
         line_sum += langs.values.sum                  # gelen veriler önce birbiriyle, sonra da diğer depoların satır sayıları ile toplanıyor.
+
+
       end
     end
     spaces_on(line_sum)                               # Yukarıda tanımlı line_sum methodu ile sayı daha okunaklı yapıldı.
+  end
+
+  def remaining_time()
+    cert = File.join(File.dirname(__FILE__), "../../app/assets/certs/cacert.pem")             # Sertifika hatasını fixlemek için sertifika manuel alınıyor.
+    connection = Faraday.new('https://api.github.com', ssl: { ca_file: cert })
+
+    headers = connection.get("").headers
   end
 end
