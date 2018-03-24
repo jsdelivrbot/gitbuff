@@ -17,12 +17,20 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     get user_show_path("wefjhwef")                  # Olmayan bir kullanıcıya istek yapılıyor.
     user = User.find_by(username: "wefjhwef")       # Veritabanından çekmeye çalışıyoruz.
 
-    assert user.nil?                                #Eğer veritabanına eklemezse user nil olacak. Eğer user nilse test başarılıdır.
+    assert user.nil?                                # Eğer veritabanına eklemezse user nil olacak. Eğer user nilse test başarılıdır.
   end
 
   test "should get most" do
-    get most_popular_users_path
+    get most_popular_users_path(1)
     assert_response :success
   end
 
+  test "if the user is most popular" do
+    100.times do
+      get user_show_path("alperen")
+    end
+    user = User.paginate(:page => 1, :per_page => 5).order(count: :DESC).first
+    assert user.username.eql? "alperen"
+  end
+  
 end

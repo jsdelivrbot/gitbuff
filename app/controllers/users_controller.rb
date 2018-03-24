@@ -22,7 +22,7 @@ class UsersController < ApplicationController
   end
 
   def most
-    @users = User.paginate(:page => params[:page], :per_page => 5).order(count: :DESC)
+    @users = User.paginate(:page => params[:page], :per_page => 10).order(count: :DESC)
   end
 
   def search
