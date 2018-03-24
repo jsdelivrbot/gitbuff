@@ -57,7 +57,7 @@ module UsersHelper
     response_repos = connection.get("users/#{ username }/repos?access_token=#{ @@access_token }")
     repos = JSON.parse(response_repos.body)
 
-    redirect_to(query_error_path) if repos.include? 'message'
+    redirect_to(query_error_path) and return if repos.include? 'message'
 
     line_sum = 0
 
@@ -66,7 +66,7 @@ module UsersHelper
         langs = connection.get("repos/#{ username }/#{ repo['name'] }/languages?access_token=#{ @@access_token }")
         langs = JSON.parse(langs.body)                # Bu iki satırda hangi dillerle kaç satır yazıldığının bilgisi geliyor.
 
-        redirect_to(query_error_path) if repos.include? 'message'
+        redirect_to(query_error_path) and return if repos.include? 'message'
 
         line_sum += langs.values.sum                  # gelen veriler önce birbiriyle, sonra da diğer depoların satır sayıları ile toplanıyor.
 

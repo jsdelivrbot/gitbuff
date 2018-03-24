@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     @git_user = helpers.get_user_info(params[:username])            # Githubdan kullanıcının verilerini getirdik.
 
 
-    redirect_to(query_error_path) if @git_user.include? 'message'
+    redirect_to(query_error_path) and return if @git_user.include? 'message'
 
     if @user.nil? && @git_user.present?                    # Kullanıcı veritabanında yok ama githubdan geliyorsa
       @user = User.create(username: @git_user['login'].downcase, image_url: @git_user['avatar_url'], count: 1)
