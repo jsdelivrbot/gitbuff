@@ -1,24 +1,18 @@
-# README
+# Git Buff
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Gitbuff, Github Api kullanarak Github kullanıcılarının bazı istatislikleri göstermek amaçlı yazılmış bir uygulamadır. Uygulama her bir kullanıcının kaç satır kod yazdığını, toplam kaç yıldız aldığını, favori dilini ve gitbuffdan kaç kez profiline bakıldığını gösterir.
 
-Things you may want to cover:
+## Kurulum
+ - Öncelikle bu depoyu klonlamalısınız.
+`git clone git@github.com:alperenbozkurt/gitbuff.git`
+- Bağımlılıkları yüklemelisiniz.
+`bundle install`
+- Veritabanını kurmalısınız.
+`rake db:setup`
+- `rails server` dediğiniz zaman kurulum tamamlanmış olur.
 
-* Ruby version
+## Ön izleme
+Projeyi [http://gitbuff.tk](http://gitbuff.tk) adresinden ön izleyebilirsiniz.
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Lisans
+Bu uygulama MIT Lisansı ile lisanslanmıştır.
