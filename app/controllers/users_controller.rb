@@ -1,23 +1,26 @@
 class UsersController < ApplicationController
-
   def index
     @user = User.new
   end
 
   def show
-
     @user = User.find_by(username: params[:username].downcase)      # Eğer kullanıcı var ise getirdik
     @git_user = helpers.user_info(params[:username])                # Githubdan kullanıcının verilerini getirdik.
 
-
-    redirect_to(query_error_path) and return if @git_user.include? 'message'
+    if @git_user.include? 'message'                                 # Responsda message anahtarı varsa hata vardır.
+      if @git_user['message'] == 'Not Found'                        # Böyle bir kullanıcı hiç yoksa diye view katmanında kontrol yapacağım.
+        return
+      else
+        redirect_to(query_error_path) and return                    # Değilse sorgu limiti dolmuştur, hata sayfasına yönlendiriyorum.
+      end
+    end
 
     if @user.nil? && @git_user.present?                             # Kullanıcı veritabanında yok ama githubdan geliyorsa
       @user = User.create(username: @git_user['login'].downcase, image_url: @git_user['avatar_url'], count: 1)
     elsif @user.present?                                            # ^^^^ bu kullanıcıyı veritabanına ekledik.
       @user.count += 1
       @user.save!                                                   # Kullanıcı zaten varsa sayacını bir arttırdık
-    end                                                             # Böyle bir kullanıcı hiç yoksa diye view katmanında kontrol yapacağım.
+    end
   end
 
   def most

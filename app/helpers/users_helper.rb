@@ -33,8 +33,8 @@ module UsersHelper
       unless repo["fork"]                             # Eğer depo forklanmamışsa
         langs = connection.get("repos/#{ username }/#{ repo['name'] }/languages?access_token=#{ @@access_token }")
         langs = JSON.parse(langs.body)                # Bu iki satırda hangi dillerle kaç satır yazıldığının bilgisi geliyor.
-        puts(repo['name']+" > " + langs.keys.first)
-        redirect_to(query_error_path) and return if repos.include? 'message'
+        print '.'
+        return "Hata" if langs.include? 'message'
 
         line_sum += langs.values.sum                  # gelen veriler önce birbiriyle, sonra da diğer depoların satır sayıları ile toplanıyor.
       end
