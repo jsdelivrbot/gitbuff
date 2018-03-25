@@ -36,6 +36,15 @@
                 Toplam Star
               .ui.basic.blue.left.pointing.label
                 = @git_user['stars']
+            .lang-icon
+              - if @git_user['fav_lang'].eql? "HTML"
+                %i.colored{class: "devicon-html5-plain-wordmark" }
+              - elsif @git_user['fav_lang'].eql?("CSS") || @git_user['fav_lang'].downcase.eql?("scss") || @git_user['fav_lang'].downcase.eql?("sass")
+                %i.colored{class: "devicon-css3-plain-wordmark" }
+              - elsif @git_user['fav_lang'].eql?("C#")
+                %i.colored{class: "devicon-csharp-plain-wordmark" }
+              - else
+                %i.colored{class: "devicon-#{ @git_user['fav_lang'].downcase }-plain-wordmark" }
         .row
           .one.wide.column
           .fourteen.wide.column
