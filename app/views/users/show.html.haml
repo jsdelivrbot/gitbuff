@@ -82,11 +82,16 @@
         $(document).ready ->
           $.ajax(url: "/#{@user.username}/line").done (html) ->     # burada sayfa yüklendikten sonra satır sayısını veren
             $("#line_count").html html                              # endpoint'e istek yaparak içeriğe sonradan eklenmesini sağladım.
-            $("#line_count_hover").attr "data-tooltip", html + " satır kod yazılmış.( Forklar sayılmıyor. )"
+            if html == "Hata\n"
+              $("#line_count_hover").attr "data-tooltip", "Hata: Hesaplanırken hata oluştu. Tekrar deneyiniz."
+            else
+              $("#line_count_hover").attr "data-tooltip", html + " satır kod yazılmış.( Forklar sayılmıyor. )"
+
   - else
     .ui.segment.yellow
       .text-center
         %h1.ui.header.blue
           Buralar boş gözüküyor
+        %p Aradığınız kullanıcı adını değiştirmiş olabilir. Ya da kullanıcı adını yanlış yazmış olabilirsiniz.
 
 = render 'footer'
