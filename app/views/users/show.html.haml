@@ -1,14 +1,14 @@
 = render 'header'
 .ui.container
-  .ui.segment
-    - if @user.present?
+  - if @user.present?
+    .ui.segment
       .ui.grid
         .row
           .four.wide.column
             = image_tag @git_user['avatar_url'], class: 'ui medium circular image shadow'
           .twelve.wide.column
             %h1
-              = @git_user['name']
+              = @git_user['name'] ||= @git_user['login']
             .ui.labeled.button{"data-inverted": "", "data-tooltip": "Bu profil #{ @user.count } kez görüntülenmiş."}
               .ui.blue.button
                 %i.eye.icon
@@ -33,17 +33,17 @@
             .ui.labeled.button{"data-inverted": "", "data-tooltip": "Toplam #{ @git_user['stars'] } star almış."}
               .ui.blue.button
                 %i.star.icon
-                Toplam Star
+                Toplam Yıldız
               .ui.basic.blue.left.pointing.label
                 = @git_user['stars']
             .lang-icon
-              - if @git_user['fav_lang'].eql? "HTML"
+              - if @git_user['fav_lang'] == "HTML"
                 %i.colored.devicon-html5-plain-wordmark
-              - elsif @git_user['fav_lang'].eql?("CSS") || @git_user['fav_lang'].downcase.eql?("scss") || @git_user['fav_lang'].downcase.eql?("sass")
+              - elsif @git_user['fav_lang'] == "CSS"
                 %i.colored.devicon-css3-plain-wordmark
-              - elsif @git_user['fav_lang'].eql?("C#")
+              - elsif @git_user['fav_lang'] == "C#"
                 %i.colored.devicon-csharp-plain-wordmark
-              - elsif @git_user['fav_lang'].eql?("JavaScript")
+              - elsif @git_user['fav_lang'] == "JavaScript"
                 %i.colored.devicon-javascript-plain
               - else
                 %i.colored{class: "devicon-#{ @git_user['fav_lang'].downcase }-plain-wordmark" }
@@ -83,10 +83,10 @@
           $.ajax(url: "/#{@user.username}/line").done (html) ->     # burada sayfa yüklendikten sonra satır sayısını veren
             $("#line_count").html html                              # endpoint'e istek yaparak içeriğe sonradan eklenmesini sağladım.
             $("#line_count_hover").attr "data-tooltip", html + " satır kod yazılmış.( Forklar sayılmıyor. )"
-    - else
-      .ui.segment.yellow
-        .text-center
-          %h1.ui.header.blue
-            Buralar boş gözüküyor
+  - else
+    .ui.segment.yellow
+      .text-center
+        %h1.ui.header.blue
+          Buralar boş gözüküyor
 
 = render 'footer'
