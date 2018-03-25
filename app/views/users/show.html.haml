@@ -36,26 +36,45 @@
                 Toplam Star
               .ui.basic.blue.left.pointing.label
                 = @git_user['stars']
+            .lang-icon
+              - if @git_user['fav_lang'].eql? "HTML"
+                %i.colored.devicon-html5-plain-wordmark
+              - elsif @git_user['fav_lang'].eql?("CSS") || @git_user['fav_lang'].downcase.eql?("scss") || @git_user['fav_lang'].downcase.eql?("sass")
+                %i.colored.devicon-css3-plain-wordmark
+              - elsif @git_user['fav_lang'].eql?("C#")
+                %i.colored.devicon-csharp-plain-wordmark
+              - else
+                %i.colored{class: "devicon-#{ @git_user['fav_lang'].downcase }-plain-wordmark" }
         .row
           .one.wide.column
           .fourteen.wide.column
             %h2
               Depolar
-            %table.ui.blue.table
+            %table.ui.blue.inverted.table
               %thead
                 %tr
+                  %th
                   %th Depo Adı
                   %th Açıklama
                   %th Programlama Dili
+                  %th Yıldızlar
+                  %th Forklar
               %tbody
                 - @git_user['repos'].each do |repo|
                   %tr
+                    %td
+                      - if repo['fork']
+                        %i.fork.icon
                     %td
                       = link_to repo['name'], repo['html_url']
                     %td
                       = repo['description'] ||= "------" # Ayrıntılar için http://alperenbozkurt.net/Rubyde-varlik-atamasi/ adresini ziyaret edebilirsiniz.
                     %td
                       = repo['language'] ||= "------"    # Eğer dil bilgisi nil gelirse "dil bulunamadı" yazıyor
+                    %td
+                      = repo['stargazers_count']
+                    %td
+                      = repo['forks_count']
           .one.wide.column
       :coffeescript
         $(document).ready ->
@@ -63,8 +82,9 @@
             $("#line_count").html html                              # endpoint'e istek yaparak içeriğe sonradan eklenmesini sağladım.
             $("#line_count_hover").attr "data-tooltip", html + " satır kod yazılmış.( Forklar sayılmıyor. )"
     - else
-      .text-center
-        %h1.ui.header.blue
-          Buralar boş gözüküyor
+      .ui.segment.yellow
+        .text-center
+          %h1.ui.header.blue
+            Buralar boş gözüküyor
 
 = render 'footer'
