@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  layout false, :only => [:line]
 
   def index
     @user = User.new
@@ -7,13 +6,13 @@ class UsersController < ApplicationController
 
   def show
 
-    @user = User.find_by(username: params[:username].downcase)               # Eğer kullanıcı var ise getirdik
-    @git_user = helpers.get_user_info(params[:username])            # Githubdan kullanıcının verilerini getirdik.
+    @user = User.find_by(username: params[:username].downcase)      # Eğer kullanıcı var ise getirdik
+    @git_user = helpers.user_info(params[:username])                # Githubdan kullanıcının verilerini getirdik.
 
 
     redirect_to(query_error_path) and return if @git_user.include? 'message'
 
-    if @user.nil? && @git_user.present?                    # Kullanıcı veritabanında yok ama githubdan geliyorsa
+    if @user.nil? && @git_user.present?                             # Kullanıcı veritabanında yok ama githubdan geliyorsa
       @user = User.create(username: @git_user['login'].downcase, image_url: @git_user['avatar_url'], count: 1)
     elsif @user.present?                                            # ^^^^ bu kullanıcıyı veritabanına ekledik.
       @user.count += 1
@@ -32,12 +31,11 @@ class UsersController < ApplicationController
   end
 
   def line
-    @line_count = helpers.get_line_count(params[:username])         # Satır sayısını hesaplayan yardımcı methodu çağırdım.
+    @line_count = helpers.line_count(params[:username])             # Satır sayısını hesaplayan yardımcı methodu çağırdım.
+    render layout: false
   end
 
   def error
-    headers = helpers.remaining_time
-    @remaining_time = Time.at headers['x-ratelimit-reset'].to_i
-    @remaining_time = @remaining_time.strftime("%H:%M")
+    @remaining_time = helpers.remaining_time
   end
 end
