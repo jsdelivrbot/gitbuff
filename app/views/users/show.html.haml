@@ -43,6 +43,8 @@
                 %i.colored.devicon-css3-plain-wordmark
               - elsif @git_user['fav_lang'].eql?("C#")
                 %i.colored.devicon-csharp-plain-wordmark
+              - elsif @git_user['fav_lang'].eql?("JavaScript")
+                %i.colored.devicon-javascript-plain
               - else
                 %i.colored{class: "devicon-#{ @git_user['fav_lang'].downcase }-plain-wordmark" }
         .row
