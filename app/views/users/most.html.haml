@@ -1,7 +1,9 @@
 = render 'header'
 .ui.container
   - if @users.empty?
-    Buralar Boş Gözüküyor yanlış gelmiş olabilirsin. Yada sen biraz erken geldin.
+    .ui.segment.yellow
+      %h1 Buralar boş gözüküyor
+      Yanlış gelmiş olabilirsin. Yada sen biraz erken geldin.
   - else
     %h1.ui.header.blue
       En Popüler Kullanıcılar

@@ -63,8 +63,9 @@
             $("#line_count").html html                              # endpoint'e istek yaparak içeriğe sonradan eklenmesini sağladım.
             $("#line_count_hover").attr "data-tooltip", html + " satır kod yazılmış.( Forklar sayılmıyor. )"
     - else
-      .text-center
-        %h1.ui.header.blue
-          Buralar boş gözüküyor
+      .ui.segment.yellow
+        .text-center
+          %h1.ui.header.blue
+            Buralar boş gözüküyor
 
 = render 'footer'
